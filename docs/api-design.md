@@ -57,24 +57,27 @@ Role access:
 }
 ```
 
-- `GET /users/:id`
-  - Access: `ADMIN`
-  - Purpose: Get one user
-
 - `PATCH /users/:id`
   - Access: `ADMIN`
-  - Purpose: Update user fields
-
-- `DELETE /users/:id`
-  - Access: `ADMIN`
-  - Purpose: Remove a user
+  - Purpose: Update only user role and status
+  - Body:
+```json
+{
+  "role": "ANALYST",
+  "status": "ACTIVE"
+}
+```
 
 ## Financial records
 
 - `GET /financial-records`
   - Access: `VIEWER`, `ANALYST`, `ADMIN`
-  - Query params: `type`, `category`, `userId`
-  - Purpose: List financial records
+  - Query params: `type`, `category`, `userId`, `dateFrom`, `dateTo`, `page`, `limit`
+  - Purpose: List financial records with filters and pagination
+  - Example:
+```text
+/financial-records?type=EXPENSE&category=Marketing&dateFrom=2026-04-01T00:00:00.000Z&dateTo=2026-04-30T23:59:59.999Z&page=1&limit=10
+```
 
 - `POST /financial-records`
   - Access: `ANALYST`, `ADMIN`
@@ -98,6 +101,14 @@ Role access:
 - `PATCH /financial-records/:id`
   - Access: `ANALYST`, `ADMIN`
   - Purpose: Update a record
+  - Body:
+```json
+{
+  "category": "Operations",
+  "amount": 4200,
+  "notes": "Updated amount"
+}
+```
 
 - `DELETE /financial-records/:id`
   - Access: `ADMIN`

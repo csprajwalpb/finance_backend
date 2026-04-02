@@ -24,6 +24,10 @@ const listRecordSchema = z.object({
     type: typeEnum.optional(),
     category: z.string().optional(),
     userId: z.string().regex(/^\d+$/, "userId must be a number").optional(),
+    dateFrom: z.string().datetime("dateFrom must be an ISO date string").optional(),
+    dateTo: z.string().datetime("dateTo must be an ISO date string").optional(),
+    page: z.coerce.number().int().min(1).default(1),
+    limit: z.coerce.number().int().min(1).max(100).default(10),
   }),
 });
 
@@ -41,14 +45,25 @@ const createRecordSchema = z.object({
 });
 
 const updateRecordSchema = z.object({
-  body: z.object({
-    userId: z.coerce.number().optional(),
-    type: typeEnum.optional(),
-    category: z.string().min(2).optional(),
-    amount: z.coerce.number().positive().optional(),
-    notes: z.string().max(500).nullable().optional(),
-    recordDate: z.string().datetime().optional(),
-  }),
+  body: z
+    .object({
+      userId: z.coerce.number().optional(),
+      type: typeEnum.optional(),
+      category: z.string().min(2).optional(),
+      amount: z.coerce.number().positive().optional(),
+      notes: z.string().max(500).nullable().optional(),
+      recordDate: z.string().datetime().optional(),
+    })
+    .refine(
+      (body) =>
+        body.userId !== undefined ||
+        body.type !== undefined ||
+        body.category !== undefined ||
+        body.amount !== undefined ||
+        body.notes !== undefined ||
+        body.recordDate !== undefined,
+      "At least one field is required to update the record"
+    ),
   params: z.object({
     id: z.string().regex(/^\d+$/, "id must be a number"),
   }),

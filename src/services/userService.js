@@ -36,33 +36,15 @@ const getUserById = async (id) => {
   return sanitizeUser(user);
 };
 
-const updateUser = async (id, data) => {
+const updateUserAccess = async (id, data) => {
   await getUserById(id);
-
-  const updateData = {
-    ...(data.name && { name: data.name }),
-    ...(data.email && { email: data.email }),
-    ...(data.role && { role: data.role }),
-    ...(data.status && { status: data.status }),
-  };
-
-  if (data.password) {
-    updateData.passwordHash = await bcrypt.hash(data.password, 10);
-  }
 
   const user = await prisma.user.update({
     where: { id },
-    data: updateData,
-  });
-
-  return sanitizeUser(user);
-};
-
-const deleteUser = async (id) => {
-  await getUserById(id);
-
-  const user = await prisma.user.delete({
-    where: { id },
+    data: {
+      ...(data.role && { role: data.role }),
+      ...(data.status && { status: data.status }),
+    },
   });
 
   return sanitizeUser(user);
@@ -71,7 +53,5 @@ const deleteUser = async (id) => {
 module.exports = {
   listUsers,
   createUser,
-  getUserById,
-  updateUser,
-  deleteUser,
+  updateUserAccess,
 };

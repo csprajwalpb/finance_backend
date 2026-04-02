@@ -1,17 +1,23 @@
 const financialRecordService = require("../services/financialRecordService");
 
 const listRecords = async (req, res) => {
-  const { type, category, userId } = req.validated.query;
+  const { type, category, userId, dateFrom, dateTo, page, limit } =
+    req.validated.query;
 
-  const records = await financialRecordService.listRecords({
+  const result = await financialRecordService.listRecords({
     type,
     category,
     userId: userId ? Number(userId) : undefined,
+    dateFrom: dateFrom ? new Date(dateFrom) : undefined,
+    dateTo: dateTo ? new Date(dateTo) : undefined,
+    page,
+    limit,
   });
 
   res.json({
     success: true,
-    data: records,
+    data: result.data,
+    pagination: result.pagination,
   });
 };
 
@@ -48,8 +54,8 @@ const updateRecord = async (req, res) => {
     ...(body.type && { type: body.type }),
     ...(body.category && { category: body.category }),
     ...(body.notes !== undefined && { notes: body.notes }),
-    ...(body.userId && { userId: Number(body.userId) }),
-    ...(body.amount && { amount: Number(body.amount) }),
+    ...(body.userId !== undefined && { userId: Number(body.userId) }),
+    ...(body.amount !== undefined && { amount: Number(body.amount) }),
     ...(body.recordDate && { recordDate: new Date(body.recordDate) }),
   };
 

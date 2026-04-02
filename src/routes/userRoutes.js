@@ -10,14 +10,6 @@ const router = express.Router();
 const roleEnum = z.enum(["VIEWER", "ANALYST", "ADMIN"]);
 const statusEnum = z.enum(["ACTIVE", "INACTIVE", "SUSPENDED"]);
 
-const idSchema = z.object({
-  params: z.object({
-    id: z.string().regex(/^\d+$/, "id must be a number"),
-  }),
-  body: z.object({}).optional(),
-  query: z.object({}).optional(),
-});
-
 const createUserSchema = z.object({
   body: z.object({
     name: z.string().min(2, "name is required"),
@@ -30,44 +22,34 @@ const createUserSchema = z.object({
   query: z.object({}).optional(),
 });
 
-const updateUserSchema = z.object({
-  body: z.object({
-    name: z.string().min(2).optional(),
-    email: z.string().email().optional(),
-    password: z.string().min(6).optional(),
-    role: roleEnum.optional(),
-    status: statusEnum.optional(),
-  }),
+const updateUserAccessSchema = z.object({
+  body: z
+    .object({
+      role: roleEnum.optional(),
+      status: statusEnum.optional(),
+    })
+    .refine(
+      (body) => body.role !== undefined || body.status !== undefined,
+      "At least one of role or status is required"
+    ),
   params: z.object({
     id: z.string().regex(/^\d+$/, "id must be a number"),
   }),
   query: z.object({}).optional(),
 });
 
-router.get("/", authorize("ADMIN"), asyncHandler(userController.listUsers));
+router.get("/", authorize("ADMIN"), asyncHandler(userController.getAllUsers));
 router.post(
   "/",
   authorize("ADMIN"),
   validate(createUserSchema),
   asyncHandler(userController.createUser)
 );
-router.get(
-  "/:id",
-  authorize("ADMIN"),
-  validate(idSchema),
-  asyncHandler(userController.getUserById)
-);
 router.patch(
   "/:id",
   authorize("ADMIN"),
-  validate(updateUserSchema),
-  asyncHandler(userController.updateUser)
-);
-router.delete(
-  "/:id",
-  authorize("ADMIN"),
-  validate(idSchema),
-  asyncHandler(userController.deleteUser)
+  validate(updateUserAccessSchema),
+  asyncHandler(userController.updateUserAccess)
 );
 
 module.exports = router;
