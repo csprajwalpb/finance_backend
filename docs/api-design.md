@@ -20,7 +20,8 @@ Temporary auth approach for this minimal setup:
 {
   "name": "Alice",
   "email": "alice@example.com",
-  "role": "ANALYST"
+  "role": "ANALYST",
+  "status": "ACTIVE"
 }
 ```
 

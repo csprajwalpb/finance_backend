@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -11,6 +11,12 @@ enum Role {
   VIEWER
   ANALYST
   ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
 }
 
 enum RecordType {
@@ -23,9 +29,13 @@ model User {
   name             String
   email            String            @unique
   role             Role              @default(VIEWER)
+  status           UserStatus        @default(ACTIVE)
   financialRecords FinancialRecord[]
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
+
+  @@index([role])
+  @@index([status])
 }
 
 model FinancialRecord {
@@ -34,7 +44,7 @@ model FinancialRecord {
   user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   type       RecordType
   category   String
-  amount     Decimal    @db.Decimal(12, 2)
+  amount     Decimal
   notes      String?
   recordDate DateTime
   createdAt  DateTime   @default(now())

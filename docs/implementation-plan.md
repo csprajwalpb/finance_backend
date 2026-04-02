@@ -2,7 +2,7 @@
 
 1. Initialize the project
 - Create `package.json`
-- Install Express, Prisma, PostgreSQL client dependencies, and validation utilities
+- Install Express, Prisma, and validation utilities
 - Add `.env.example` for local setup
 
 2. Configure infrastructure
@@ -22,7 +22,7 @@
 
 5. Implement access control
 - Create auth middleware that reads `x-user-id`
-- Load the current user from PostgreSQL through Prisma
+- Load the current user from SQLite through Prisma
 - Add role-based `authorize` middleware
 
 6. Build user management
