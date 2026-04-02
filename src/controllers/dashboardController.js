@@ -18,8 +18,8 @@ const getTrends = async (req, res) => {
   });
 };
 
-const getCategoryBreakdown = async (req, res) => {
-  const breakdown = await dashboardService.getCategoryBreakdown();
+const getCategoryTotals = async (req, res) => {
+  const breakdown = await dashboardService.getCategoryTotals();
 
   res.json({
     success: true,
@@ -27,8 +27,20 @@ const getCategoryBreakdown = async (req, res) => {
   });
 };
 
+const getRecentTransactions = async (req, res) => {
+  const transactions = await dashboardService.getRecentTransactions(
+    req.validated.query.limit
+  );
+
+  res.json({
+    success: true,
+    data: transactions,
+  });
+};
+
 module.exports = {
   getSummary,
   getTrends,
-  getCategoryBreakdown,
+  getCategoryTotals,
+  getRecentTransactions,
 };

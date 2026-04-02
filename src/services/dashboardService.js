@@ -35,7 +35,7 @@ const getSummary = async () => {
   return totals;
 };
 
-const getCategoryBreakdown = async () => {
+const getCategoryTotals = async () => {
   const grouped = await prisma.financialRecord.groupBy({
     by: ["type", "category"],
     _sum: { amount: true },
@@ -50,6 +50,26 @@ const getCategoryBreakdown = async () => {
     totalAmount: toNumber(item._sum.amount),
   }));
 };
+
+const getRecentTransactions = async (limit) =>
+  prisma.financialRecord.findMany({
+    take: limit,
+    orderBy: [
+      { recordDate: "desc" },
+      { createdAt: "desc" },
+    ],
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          status: true,
+        },
+      },
+    },
+  });
 
 const getMonthlyTrends = async () => {
   const records = await prisma.financialRecord.findMany({
@@ -91,6 +111,7 @@ const getMonthlyTrends = async () => {
 
 module.exports = {
   getSummary,
-  getCategoryBreakdown,
+  getCategoryTotals,
+  getRecentTransactions,
   getMonthlyTrends,
 };

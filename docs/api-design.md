@@ -127,10 +127,15 @@ Role access:
 }
 ```
 
+- `GET /dashboard/recent-transactions`
+  - Access: `ANALYST`, `ADMIN`
+  - Query params: `limit`
+  - Purpose: Return the latest financial records for dashboard widgets
+
 - `GET /dashboard/trends`
   - Access: `ANALYST`, `ADMIN`
   - Purpose: Return monthly income vs expense trend
 
-- `GET /dashboard/category-breakdown`
+- `GET /dashboard/category-totals`
   - Access: `ANALYST`, `ADMIN`
   - Purpose: Return totals grouped by type and category
