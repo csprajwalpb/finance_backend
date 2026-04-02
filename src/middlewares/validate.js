@@ -8,10 +8,16 @@ const validate = (schema) => (req, res, next) => {
   });
 
   if (!result.success) {
+    const details = result.error.issues.map((issue) => ({
+      path: issue.path.join("."),
+      message: issue.message,
+    }));
+
     return next(
       new AppError(
-        result.error.issues.map((issue) => issue.message).join(", "),
-        400
+        "Validation failed",
+        400,
+        details
       )
     );
   }
