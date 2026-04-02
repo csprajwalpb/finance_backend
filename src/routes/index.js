@@ -1,10 +1,14 @@
 const express = require("express");
+const authRoutes = require("./authRoutes");
 const userRoutes = require("./userRoutes");
 const financialRecordRoutes = require("./financialRecordRoutes");
 const dashboardRoutes = require("./dashboardRoutes");
+const authMiddleware = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
+router.use("/auth", authRoutes);
+router.use(authMiddleware);
 router.use("/users", userRoutes);
 router.use("/financial-records", financialRecordRoutes);
 router.use("/dashboard", dashboardRoutes);

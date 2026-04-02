@@ -7,17 +7,17 @@ const router = express.Router();
 
 router.get(
   "/summary",
-  authorize("VIEWER", "ANALYST", "ADMIN"),
+  authorize("ANALYST"),
   asyncHandler(dashboardController.getSummary)
 );
 router.get(
   "/trends",
-  authorize("VIEWER", "ANALYST", "ADMIN"),
+  authorize("ANALYST"),
   asyncHandler(dashboardController.getTrends)
 );
 router.get(
   "/category-breakdown",
-  authorize("VIEWER", "ANALYST", "ADMIN"),
+  authorize("ANALYST"),
   asyncHandler(dashboardController.getCategoryBreakdown)
 );
 

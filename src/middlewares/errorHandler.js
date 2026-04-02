@@ -1,4 +1,5 @@
 const { Prisma } = require("@prisma/client");
+const jwt = require("jsonwebtoken");
 
 const errorHandler = (error, req, res, next) => {
   let statusCode = error.statusCode || 500;
@@ -14,6 +15,16 @@ const errorHandler = (error, req, res, next) => {
       statusCode = 400;
       message = "Related record does not exist";
     }
+  }
+
+  if (error instanceof jwt.JsonWebTokenError) {
+    statusCode = 401;
+    message = "Invalid authentication token";
+  }
+
+  if (error instanceof jwt.TokenExpiredError) {
+    statusCode = 401;
+    message = "Authentication token has expired";
   }
 
   res.status(statusCode).json({

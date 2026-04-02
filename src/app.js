@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const routes = require("./routes");
-const authMiddleware = require("./middlewares/authMiddleware");
 const notFound = require("./middlewares/notFound");
 const errorHandler = require("./middlewares/errorHandler");
 
@@ -19,7 +18,7 @@ app.get("/health", (req, res) => {
   });
 });
 
-app.use("/api", authMiddleware, routes);
+app.use("/api", routes);
 app.use(notFound);
 app.use(errorHandler);
 

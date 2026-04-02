@@ -22,6 +22,7 @@ const createUserSchema = z.object({
   body: z.object({
     name: z.string().min(2, "name is required"),
     email: z.string().email("valid email is required"),
+    password: z.string().min(6, "password must be at least 6 characters"),
     role: roleEnum,
     status: statusEnum.default("ACTIVE"),
   }),
@@ -33,6 +34,7 @@ const updateUserSchema = z.object({
   body: z.object({
     name: z.string().min(2).optional(),
     email: z.string().email().optional(),
+    password: z.string().min(6).optional(),
     role: roleEnum.optional(),
     status: statusEnum.optional(),
   }),

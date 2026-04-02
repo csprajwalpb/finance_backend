@@ -2,9 +2,40 @@
 
 Base URL: `/api`
 
-Temporary auth approach for this minimal setup:
-- Pass the current user id using the `x-user-id` header.
-- The middleware loads the user from the database and applies role checks.
+Authentication approach for this setup:
+- Use `POST /auth/register` to create a starter viewer account.
+- Use `POST /auth/login` to receive a JWT token.
+- Send the token in the `Authorization: Bearer <token>` header.
+
+Role access:
+- `VIEWER`: read-only access to financial records
+- `ANALYST`: viewer access plus dashboard analytics
+- `ADMIN`: full access, including user management and record deletion
+
+## Authentication
+
+- `POST /auth/register`
+  - Access: Public
+  - Purpose: Create a new viewer account
+  - Body:
+```json
+{
+  "name": "Alice",
+  "email": "alice@example.com",
+  "password": "password123"
+}
+```
+
+- `POST /auth/login`
+  - Access: Public
+  - Purpose: Authenticate and receive a JWT
+  - Body:
+```json
+{
+  "email": "alice@example.com",
+  "password": "password123"
+}
+```
 
 ## User management
 
@@ -20,6 +51,7 @@ Temporary auth approach for this minimal setup:
 {
   "name": "Alice",
   "email": "alice@example.com",
+  "password": "password123",
   "role": "ANALYST",
   "status": "ACTIVE"
 }
@@ -74,7 +106,7 @@ Temporary auth approach for this minimal setup:
 ## Dashboard summary
 
 - `GET /dashboard/summary`
-  - Access: `VIEWER`, `ANALYST`, `ADMIN`
+  - Access: `ANALYST`, `ADMIN`
   - Response:
 ```json
 {
@@ -85,9 +117,9 @@ Temporary auth approach for this minimal setup:
 ```
 
 - `GET /dashboard/trends`
-  - Access: `VIEWER`, `ANALYST`, `ADMIN`
+  - Access: `ANALYST`, `ADMIN`
   - Purpose: Return monthly income vs expense trend
 
 - `GET /dashboard/category-breakdown`
-  - Access: `VIEWER`, `ANALYST`, `ADMIN`
+  - Access: `ANALYST`, `ADMIN`
   - Purpose: Return totals grouped by type and category
