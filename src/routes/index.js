@@ -8,10 +8,9 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const router = express.Router();
 
 router.use("/auth", authRoutes);
-router.use(authMiddleware);
-router.use("/users", userRoutes);
-router.use("/records", financialRecordRoutes);
-router.use("/financial-records", financialRecordRoutes);
-router.use("/dashboard", dashboardRoutes);
+router.use("/users", authMiddleware, userRoutes);
+router.use("/records", authMiddleware, financialRecordRoutes);
+router.use("/financial-records", authMiddleware, financialRecordRoutes);
+router.use("/dashboard", authMiddleware, dashboardRoutes);
 
 module.exports = router;

@@ -17,22 +17,22 @@ const recentTransactionsSchema = z.object({
 
 router.get(
   "/summary",
-  authorize("ANALYST"),
+  authorize("ANALYST", "ADMIN"),
   asyncHandler(dashboardController.getSummary)
 );
 router.get(
   "/trends",
-  authorize("ANALYST"),
+  authorize("ANALYST", "ADMIN"),
   asyncHandler(dashboardController.getTrends)
 );
 router.get(
   "/category-totals",
-  authorize("ANALYST"),
+  authorize("ANALYST", "ADMIN"),
   asyncHandler(dashboardController.getCategoryTotals)
 );
 router.get(
   "/recent-transactions",
-  authorize("ANALYST"),
+  authorize("ANALYST", "ADMIN"),
   validate(recentTransactionsSchema),
   asyncHandler(dashboardController.getRecentTransactions)
 );

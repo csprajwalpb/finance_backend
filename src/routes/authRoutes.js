@@ -44,5 +44,6 @@ router.post(
   validate(refreshTokenSchema),
   asyncHandler(authController.refreshToken)
 );
+console.log("Auth routes loaded");
 
 module.exports = router;
