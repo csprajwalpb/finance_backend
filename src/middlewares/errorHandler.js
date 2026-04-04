@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const errorHandler = (error, req, res, next) => {
   let statusCode = error.statusCode || 500;
   let message = error.message || "Internal server error";
+  let details = error.details || null;
 
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     if (error.code === "P2002") {
@@ -27,10 +28,29 @@ const errorHandler = (error, req, res, next) => {
     message = "Authentication token has expired";
   }
 
+  if (error instanceof SyntaxError && error.status === 400 && "body" in error) {
+    statusCode = 400;
+    message = "Invalid JSON payload";
+    details = [
+      {
+        path: "body",
+        message: "Request body contains invalid JSON",
+      },
+    ];
+  }
+
+  if (statusCode >= 500 && process.env.NODE_ENV === "production") {
+    message = "Internal server error";
+    details = null;
+  }
+
   res.status(statusCode).json({
     success: false,
+    statusCode,
     message,
-    ...(error.details && { errors: error.details }),
+    path: req.originalUrl,
+    timestamp: new Date().toISOString(),
+    ...(details && { errors: details }),
     ...(process.env.NODE_ENV !== "production" && { stack: error.stack }),
   });
 };
