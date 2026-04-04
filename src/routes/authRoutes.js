@@ -25,11 +25,24 @@ const loginSchema = z.object({
   query: z.object({}).optional(),
 });
 
+const refreshTokenSchema = z.object({
+  body: z.object({
+    refreshToken: z.string().min(1, "refreshToken is required"),
+  }),
+  params: z.object({}).optional(),
+  query: z.object({}).optional(),
+});
+
 router.post(
   "/register",
   validate(registerSchema),
   asyncHandler(authController.register)
 );
 router.post("/login", validate(loginSchema), asyncHandler(authController.login));
+router.post(
+  "/refresh",
+  validate(refreshTokenSchema),
+  asyncHandler(authController.refreshToken)
+);
 
 module.exports = router;

@@ -18,7 +18,17 @@ const login = async (req, res) => {
   });
 };
 
+const refreshToken = async (req, res) => {
+  const result = await authService.refreshAccessToken(req.validated.body);
+
+  res.json({
+    success: true,
+    data: result,
+  });
+};
+
 module.exports = {
   register,
   login,
+  refreshToken,
 };

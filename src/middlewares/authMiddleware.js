@@ -1,17 +1,26 @@
 const prisma = require("../config/prisma");
 const AppError = require("../utils/appError");
 const asyncHandler = require("../utils/asyncHandler");
-const { verifyToken } = require("../utils/jwt");
+const { verifyAccessToken } = require("../utils/jwt");
+
+const extractBearerToken = (authorizationHeader) => {
+  if (!authorizationHeader) {
+    throw new AppError("Authorization header is required", 401);
+  }
+
+  const [scheme, token] = authorizationHeader.split(" ");
+
+  if (scheme !== "Bearer" || !token) {
+    throw new AppError("Authorization header must use Bearer token", 401);
+  }
+
+  return token;
+};
 
 const authMiddleware = asyncHandler(async (req, res, next) => {
   const authorizationHeader = req.header("authorization");
-
-  if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
-    throw new AppError("Authorization token is required", 401);
-  }
-
-  const token = authorizationHeader.split(" ")[1];
-  const payload = verifyToken(token);
+  const token = extractBearerToken(authorizationHeader);
+  const payload = verifyAccessToken(token);
 
   const user = await prisma.user.findUnique({
     where: { id: Number(payload.sub) },

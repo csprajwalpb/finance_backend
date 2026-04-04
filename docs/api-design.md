@@ -5,6 +5,8 @@ Base URL: `/api`
 Authentication approach for this setup:
 - Use `POST /auth/register` to create a starter viewer account.
 - Use `POST /auth/login` to receive a JWT token.
+- Access tokens expire after `1 day` by default.
+- Use `POST /auth/refresh` to exchange a valid refresh token for a new token pair.
 - Send the token in the `Authorization: Bearer <token>` header.
 
 Role access:
@@ -34,6 +36,16 @@ Role access:
 {
   "email": "alice@example.com",
   "password": "password123"
+}
+```
+
+- `POST /auth/refresh`
+  - Access: Public
+  - Purpose: Get a new access token using a valid refresh token
+  - Body:
+```json
+{
+  "refreshToken": "your-refresh-token"
 }
 ```
 
