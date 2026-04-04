@@ -10,6 +10,7 @@ const router = express.Router();
 router.use("/auth", authRoutes);
 router.use(authMiddleware);
 router.use("/users", userRoutes);
+router.use("/records", financialRecordRoutes);
 router.use("/financial-records", financialRecordRoutes);
 router.use("/dashboard", dashboardRoutes);
 

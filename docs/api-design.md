@@ -78,6 +78,22 @@ Role access:
 ```text
 /financial-records?type=EXPENSE&category=Marketing&dateFrom=2026-04-01T00:00:00.000Z&dateTo=2026-04-30T23:59:59.999Z&page=1&limit=10
 ```
+  - Response:
+```json
+{
+  "data": [],
+  "pagination": {
+    "total": 0,
+    "page": 1,
+    "limit": 10,
+    "totalPages": 1
+  }
+}
+```
+
+- `GET /records`
+  - Access: `VIEWER`, `ANALYST`, `ADMIN`
+  - Purpose: Alias for paginated financial record listing
 
 - `POST /financial-records`
   - Access: `ANALYST`, `ADMIN`

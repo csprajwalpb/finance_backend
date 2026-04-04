@@ -14,11 +14,7 @@ const listRecords = async (req, res) => {
     limit,
   });
 
-  res.json({
-    success: true,
-    data: result.data,
-    pagination: result.pagination,
-  });
+  res.json(result);
 };
 
 const createRecord = async (req, res) => {
